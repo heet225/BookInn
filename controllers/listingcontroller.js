@@ -10,9 +10,11 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createListing = async (req, res, next) => {
-    // normalize payload: accept either { listing: {...} } or flat { title, ... }
+  let url = req.file.path;
+  let filename = req.file.filename;
     const data = req.body.listing ? req.body.listing : req.body;
     let newListing = new Listing(data);
+  newListing.image = { url, filename };
     newListing.owner = req.user._id;
     console.log(newListing);
     await newListing.save();
@@ -39,15 +41,24 @@ module.exports.renderEditForm = async (req, res) => {
       req.flash("error", "listing doesn't exist!");
       return res.redirect("/listings");
     }
-
-    res.render("listings/edit.ejs", { ListingData });
+  let originalImageUrl = ListingData.image.url;
+    originalImageUrl = originalImageUrl.replace("/upload/", "/upload/w_300/");
+  res.render("listings/edit.ejs", { ListingData, originalImageUrl });
   };
 
 module.exports.updateListing = async (req, res) => {
-    let { id } = req.params;
-    // when form is nested use req.body.listing, otherwise req.body
+  const { id } = req.params;
     const updateData = req.body.listing ? req.body.listing : req.body;
-    await Listing.findByIdAndUpdate(id, updateData, { runValidators: true });
+  // First update all non-image fields
+  let listing = await Listing.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+
+  // If a new image was uploaded, update the image too
+  if (req.file) {
+    const { path: url, filename } = req.file;
+    listing.image = { url, filename };
+    await listing.save();
+  }
+
     req.flash("success", "Successfully updated the listing!");
     res.redirect("/listings");
   };
