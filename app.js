@@ -10,7 +10,7 @@ const method_overrride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/expressError.js");
 const session = require("express-session");
-// const MongoStore = require("connect-mongo");
+const MongoStore = require("connect-mongo").default;
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -30,21 +30,31 @@ app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-main()
-.then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.log(err));
-
 async function main() {
   await mongoose.connect(DBURL);
   console.log("MongoDB connected");
 }
 
+main()
+.then(() => console.log("Connected to MongoDB"))
+.catch((err) => console.log(err));
+  
+const store = new MongoStore({
+  mongoUrl: DBURL,
+  collectionName: "sessions",
+  ttl: 7 * 24 * 60 * 60
+});
 
+
+store.on("error", function (e) {
+      console.log("ERROR in mongo session store", e);
+      });
 
 const sessionOptions = {
-  secret: "secretcode!",
+  store: store,
+  secret: process.env.SECRET ,
   resave: false,
-  saveUninitialized: true,
+    saveUninitialized: false,
   cookie: {
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
@@ -86,6 +96,11 @@ app.use((req, res, next) => {
 
 // error handling middleware
 app.use((err, req, res, next) => {
+    console.log("Error caught:", err.message);
+    console.log("Request URL:", req.originalUrl);
+    if (res.headersSent) {
+      return next(err);
+    }
   let { statuscode, message } = err;
   if (!statuscode) statuscode = 500;
   if (!message) message = "Something went wrong!";
