@@ -15,8 +15,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
-const DBURL = process.env.ATLASDB_URL
-
+const DBURL = process.env.ATLASDB_URL;
 
 const listingsRoutes = require("./routes/listings.js");
 const reviewsRoutes = require("./routes/reviews.js");
@@ -36,25 +35,24 @@ async function main() {
 }
 
 main()
-.then(() => console.log("Connected to MongoDB"))
-.catch((err) => console.log(err));
-  
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.log(err));
+
 const store = new MongoStore({
   mongoUrl: DBURL,
   collectionName: "sessions",
-  ttl: 7 * 24 * 60 * 60
+  ttl: 7 * 24 * 60 * 60,
 });
 
-
 store.on("error", function (e) {
-      console.log("ERROR in mongo session store", e);
-      });
+  console.log("ERROR in mongo session store", e);
+});
 
 const sessionOptions = {
   store: store,
-  secret: process.env.SECRET ,
+  secret: process.env.SECRET,
   resave: false,
-    saveUninitialized: false,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
@@ -79,16 +77,15 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("I am rooting for you!");
+  res.redirect("/listings");
 });
 
-  
-  // use listings routes
-  app.use("/listings", listingsRoutes);
-  // use reviews routes
-  app.use("/listings/:id/reviews", reviewsRoutes);
+// use listings routes
+app.use("/listings", listingsRoutes);
+// use reviews routes
+app.use("/listings/:id/reviews", reviewsRoutes);
 // use users routes
-  app.use("/", usersRoutes);
+app.use("/", usersRoutes);
 
 app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
@@ -96,11 +93,11 @@ app.use((req, res, next) => {
 
 // error handling middleware
 app.use((err, req, res, next) => {
-    console.log("Error caught:", err.message);
-    console.log("Request URL:", req.originalUrl);
-    if (res.headersSent) {
-      return next(err);
-    }
+  console.log("Error caught:", err.message);
+  console.log("Request URL:", req.originalUrl);
+  if (res.headersSent) {
+    return next(err);
+  }
   let { statuscode, message } = err;
   if (!statuscode) statuscode = 500;
   if (!message) message = "Something went wrong!";
