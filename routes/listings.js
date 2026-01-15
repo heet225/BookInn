@@ -7,10 +7,17 @@ const ExpressError = require("../utils/expressError.js");
 const { isLoggedIn, isOwner } = require("../middleware.js");
 const passport = require("passport");
 const listingController = require("../controllers/listingcontroller.js");
+const multer = require("multer");
+const { storage } = require("../cloudconfig.js");
+const upload = multer({ storage });
 
 const validateListing = (req, res, next) => {
   // accept either { listing: {...} } or flat { title, description, ... }
   const payload = req.body.listing ? req.body : { listing: req.body };
+  // Remove image from validation since it's handled by multer (file upload)
+  if (payload.listing) {
+    delete payload.listing.image;
+  }
   const { error } = listingSchema.validate(payload);
   if (error) {
     let errMsg = error.details.map((el) => el.message).join(",");
@@ -21,10 +28,10 @@ const validateListing = (req, res, next) => {
 };
 
 // index route
-router.get(
-  "/",
-  wrapAsync(listingController.index)
-);
+router.get("/", wrapAsync(listingController.index));
+
+// search route
+router.get("/search", wrapAsync(listingController.searchListings));
 
 // new route
 router.get("/new", isLoggedIn, listingController.renderNewForm);
@@ -33,15 +40,13 @@ router.get("/new", isLoggedIn, listingController.renderNewForm);
 router.post(
   "/",
   isLoggedIn,
+  upload.single("listing[image]"),
   validateListing,
   wrapAsync(listingController.createListing)
 );
 
 // show route
-router.get(
-  "/:id",
-  wrapAsync(listingController.showListing)
-);
+router.get("/:id", wrapAsync(listingController.showListing));
 
 // edit route
 router.get(
@@ -56,6 +61,7 @@ router.put(
   "/:id",
   isLoggedIn,
   isOwner,
+  upload.single("listing[image]"),
   validateListing,
   wrapAsync(listingController.updateListing)
 );

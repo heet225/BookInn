@@ -1,59 +1,104 @@
-<% layout ("layouts/boilerplate") %>
-<body>
-    <div class="row">
-        <div class="col-8 offset-2">
-            <br>
-            <h3>Create New Listing</h3>
-    <form action="/listings" method="POST" novalidate class="needs-validation">
-        <div class="mb-3">
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" id="title" name="title" class="form-control" required>
-        <div class="invalid-feedback">
-            Please provide a title.
-        </div>
-        </div>
+<%- layout("/layouts/boilerplate") %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="form-container">
+        <h2 style="font-weight: 700; margin-bottom: 0.5rem">
+          Create a Listing
+        </h2>
+        <p class="text-muted mb-4">
+          Share your space with travelers around the world
+        </p>
 
+        <form
+          action="/listings"
+          method="POST"
+          novalidate
+          class="needs-validation"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              type="text"
+              id="title"
+              name="listing[title]"
+              class="form-control"
+              placeholder="Give your place a catchy title"
+              required
+            />
+            <div class="invalid-feedback">Please provide a title.</div>
+          </div>
 
-        <div class="mb-3">
-        <label for="description" class="form-label">Description:</label>
-        <textarea id="description" name="description" class="form-control" required></textarea>
-        <div class="invalid-feedback">
-            Please provide a description.
-        </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              id="description"
+              name="listing[description]"
+              class="form-control"
+              rows="4"
+              placeholder="Describe what makes your place special"
+              required
+            ></textarea>
+            <div class="invalid-feedback">Please provide a description.</div>
+          </div>
 
-        
-        <div class="mb-3">
-        <label for="image-link" class="form-label">Image URL:</label>
-        <input type="text" id="image-link" name="image" class="form-control">
-        </div>
-        
-        <div class="row">
-            <div class="mb-3 col-md-4">
-        <label for="price" class="form-label">Price:</label>
-        <input type="number" id="price" name="price" class="form-control" required>
-        <div class="invalid-feedback">
-            Please provide a price.
-        </div>
-        </div>
-        
-        <div class="mb-3 col-md-8">
-        <label for="country" class="form-label">Country:</label>
-        <input type="text" id="country" name="country" class="form-control" required>
-        <div class="invalid-feedback">
-            Please provide a country.
-        </div>
-        </div>
-        
-        <div class="mb-3">
-        <label for="location" class="form-label">Location:</label>
-        <input type="text" id="location" name="location" class="form-control" required>
-        <div class="invalid-feedback">
-            Please provide a location.
-        </div>
-        <br><br>
-        <button type="submit" class="btn btn-dark add-btn">Create Listing</button>
-        <br><br><br>
-    </form>
+          <div class="mb-3">
+            <label for="image" class="form-label">Upload Image</label>
+            <input
+              type="file"
+              id="image"
+              name="listing[image]"
+              class="form-control"
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="price" class="form-label">Price per Night (₹)</label>
+              <input
+                type="number"
+                id="price"
+                name="listing[price]"
+                class="form-control"
+                placeholder="0"
+                required
+              />
+              <div class="invalid-feedback">Please provide a price.</div>
+            </div>
+
+            <div class="col-md-8 mb-3">
+              <label for="location" class="form-label">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="listing[location]"
+                class="form-control"
+                placeholder="City or neighborhood"
+                required
+              />
+              <div class="invalid-feedback">Please provide a location.</div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="country" class="form-label">Country</label>
+            <input
+              type="text"
+              id="country"
+              name="listing[country]"
+              class="form-control"
+              placeholder="Country"
+              required
+            />
+            <div class="invalid-feedback">Please provide a country.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100">
+            Create Listing
+          </button>
+        </form>
+      </div>
     </div>
-    </div>
-</body>
+  </div>
+</div>

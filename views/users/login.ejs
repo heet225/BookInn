@@ -1,17 +1,45 @@
-<% layout ("layouts/boilerplate") %>
-<body>
-    <div class="row mt-3"> 
-        <div class="col-md-4 offset-md-4 mt-5">
-            <h1 class="text-center mb-4">Login to BookInn</h1>
-            <form action="/login" method="POST" novalidate class="needs-validation">
-                <div class="form-group mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-            </form>
+<%- layout("/layouts/boilerplate") %>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-5 col-lg-4">
+    <div class="auth-card">
+      <h2 class="text-center mb-4" style="font-weight: 700">Welcome Back</h2>
+      <p class="text-center text-muted mb-4">Log in to continue to BookInn</p>
+      <form action="/login" method="POST" novalidate class="needs-validation">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            required
+          />
         </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control form-control-lg"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+          Log In
+        </button>
+        <p class="text-center text-muted">
+          Don't have an account?
+          <a
+            href="/signup"
+            class="text-decoration-none"
+            style="color: #fe424d; font-weight: 600"
+            >Sign Up</a
+          >
+        </p>
+      </form>
     </div>
-</body>
+  </div>
+</div>

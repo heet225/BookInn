@@ -16,19 +16,11 @@ const initDB = async () => {
     await Listing.deleteMany({});
     console.log("Cleared existing listings");
 
-    // Convert image objects to URL strings if needed
-    initialdata.data = initialdata.data.map((item) => {
-      const imageValue = item.image;
-      const imageUrl =
-        imageValue && typeof imageValue === "object" && imageValue.url
-          ? imageValue.url
-          : imageValue;
-      return {
-        ...item,
-        image: imageUrl,
-        owner: "6921febc6497216003cd7f5e", // ⬅️ some user id (single owner id)
-      };
-    });
+    // Assign a default owner to each listing
+    initialdata.data = initialdata.data.map((obj) => ({
+      ...obj,
+      owner: "6942cd11bcdeefc946172fd9", // Replace with a valid user ID from your database
+    }));
 
     await Listing.insertMany(initialdata.data);
     console.log("Inserted initial data");

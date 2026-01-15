@@ -1,22 +1,33 @@
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css" />
 <% layout ("layouts/boilerplate") %>
-<body>
-  <h2>All Listings</h2>
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-1" >
-  <% for (let listing of listings) {%>
-    <a href="/listings/<%= listing._id %>" class="listing-links">
-  <div class="card col listing-card">
-  <img src="<%= listing.image %>" class="card-img-top img-index-card" alt="listing-image">
-  <div class="card-img-overlay"></div>
-  <div class="card-body">
-    <p class="card-text">
-        <b><%= listing.title %></b><br>
-        Price: &#x20b9;<%= listing.price.toLocaleString('en-IN') %>/night
-    </p>
+<div class="container mt-4">
+  <h2 class="mb-4" style="font-weight: 700">Explore Places to Stay</h2>
+  <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4">
+    <% for (let listing of listings) {%>
+    <div class="col">
+      <a href="/listings/<%= listing._id %>" class="listing-links">
+        <div class="card listing-card h-100">
+          <img
+            src="<%= typeof listing.image === 'string' ? listing.image : listing.image.url %>"
+            class="card-img-top"
+            alt="<%= listing.title %>"
+          />
+          <div class="card-img-overlay"></div>
+          <div class="card-body">
+            <p class="card-text">
+              <b><%= listing.title %></b><br />
+              <span style="color: #717171"
+                ><%= listing.location %>, <%= listing.country %></span
+              ><br />
+              <span style="font-weight: 600"
+                >₹<%= listing.price.toLocaleString('en-IN') %></span
+              >
+              <span style="color: #717171">/ night</span>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <% } %>
   </div>
 </div>
-</a>
-<% } %>
-</div>
-    
-</body>

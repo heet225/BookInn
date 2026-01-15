@@ -1,36 +1,119 @@
-<% layout ("layouts/boilerplate") %>
-<body>
-    <div class="row">
-        <div class="col-8 offset-2">
-    <h2>Edit Listing</h2>
-    <p>listing ID: <%= ListingData._id %></p>
-    <form action="/listings/<%= ListingData._id %>?_method=PUT" method="POST">
-        <div class="mb-3">
-        <label for="title" class="form-label">Title:</label>
-        <input type="text" id="title" name="title" value="<%= ListingData.title %>" class="form-control" required>
-        </div>
-        <div class="mb-3">
-        <label for="description" class="form-label">Description:</label>
-        <textarea id="description" name="description" class="form-control" required><%= ListingData.description %></textarea>
-        </div>
-        <div class="mb-3">
-        <label for="price" class="form-label">Price:</label>
-        <input type="number" id="price" name="price" value="<%= ListingData.price %>" class="form-control" required>
-        </div>
-        <div class="mb-3">
-        <label for="image" class="form-label">Image URL:</label>
-        <input type="text" id="image" name="image" value="<%= ListingData.image %>" class="form-control">
-        </div>  
-        <div class="mb-3">
-        <label for="location" class="form-label">Location:</label>
-        <input type="text" id="location" name="location" value="<%= ListingData.location %>" class="form-control" required>
-        </div>
-        <div class="mb-3">
-        <label for="country" class="form-label">Country:</label>
-        <input type="text" id="country" name="country" value="<%= ListingData.country %>" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-dark">Update Listing</button>
-    </form>
+<link rel="stylesheet" href="/css/style.css" />
+<% layout("layouts/boilerplate") %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="form-container">
+        <h2 style="font-weight: 700; margin-bottom: 0.5rem">Edit Listing</h2>
+        <p class="text-muted mb-4">Update your listing details</p>
+
+        <form
+          action="/listings/<%= ListingData._id %>?_method=PUT"
+          method="POST"
+          enctype="multipart/form-data"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              type="text"
+              id="title"
+              name="listing[title]"
+              value="<%= ListingData.title %>"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea
+              id="description"
+              name="listing[description]"
+              class="form-control"
+              rows="4"
+              required
+            >
+<%= ListingData.description %></textarea
+            >
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Current Image</label>
+            <div class="mb-2">
+              <img
+                src="<%= originalImageUrl %>"
+                alt="Current listing image"
+                style="
+                  width: 100%;
+                  max-height: 200px;
+                  object-fit: cover;
+                  border-radius: 8px;
+                "
+              />
+            </div>
+            <label for="image" class="form-label"
+              >Upload New Image (optional)</label
+            >
+            <input
+              type="file"
+              id="image"
+              name="listing[image]"
+              class="form-control"
+            />
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label for="price" class="form-label">Price per Night (₹)</label>
+              <input
+                type="number"
+                id="price"
+                name="listing[price]"
+                value="<%= ListingData.price %>"
+                class="form-control"
+                required
+              />
+            </div>
+
+            <div class="col-md-8 mb-3">
+              <label for="location" class="form-label">Location</label>
+              <input
+                type="text"
+                id="location"
+                name="listing[location]"
+                value="<%= ListingData.location %>"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="country" class="form-label">Country</label>
+            <input
+              type="text"
+              id="country"
+              name="listing[country]"
+              value="<%= ListingData.country %>"
+              class="form-control"
+              required
+            />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">
+              Update Listing
+            </button>
+            <a
+              href="/listings/<%= ListingData._id %>"
+              class="btn btn-outline-dark"
+              >Cancel</a
+            >
+          </div>
+        </form>
+      </div>
     </div>
-    </div>
-</body>
+  </div>
+</div>
